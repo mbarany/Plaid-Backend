@@ -1,0 +1,18 @@
+{
+  "name": "Plaid-Backend",
+  "version": "0.0.1",
+  "description": "",
+  "main": "gulpfile.js",
+  "dependencies": {
+    "gulp": "~3.6.2",
+    "gulp-bower-files": "~0.2.3",
+    "gulp-clean": "~0.2.4",
+    "gulp-concat": "~2.2.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Michael Barany <michael.barany@gmail.com>",
+  "license": "Apache2"
+}

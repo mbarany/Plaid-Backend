@@ -1,0 +1,7 @@
+{
+    "require": {
+        "nategood/httpful": "*",
+        "klein/klein": "2.0.*",
+        "doctrine/orm": "*"
+    }
+}
