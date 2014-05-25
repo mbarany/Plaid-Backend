@@ -24,6 +24,7 @@ Requirements
 
 Configuration
 =============
+- Setup your HTTP Web Server webroot to point at the `webroot` directory
 - Copy `config/Config.php.sample` to `config/Config.php` and make the necessary config changes
 - Run `composer install` for PHP dependencies
 - Run `npm install` for build dependencies
