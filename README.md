@@ -6,9 +6,35 @@ This project contains the following main elements:
 
 Pull requests are welcome and encouraged!
 
+
+Compatable Frontend Projects
+============================
+- Android App (https://github.com/mbarany/Plaid-Android)
+
+
+Requirements
+============
+- Linux OS (tested on CentOS 6)
+- PHP 5.4+
+- Relational SQL database (MySQL, SQL Server, etc) that Doctrine supports (http://www.doctrine-project.org/2010/02/11/database-support-doctrine2.html)
+- Composer (https://getcomposer.org/)
+- NodeJS & NPM (https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager)
+- Bower `npm install -g bower`
+
+
+Configuration
+=============
+- Copy `config/Config.php.sample` to `config/Config.php` and make the necessary config changes
+- Run `composer install` for PHP dependencies
+- Run `npm install` for build dependencies
+- Run `bower install` for javascript dependencies
+- Run `gulp bower-files` to build the project javascript files
+
+
 Privacy Policy
 ==============
 This code uses the Paid API. See Plaid's Privacy Policy at https://plaid.com/privacy
+
 
 License
 =======
