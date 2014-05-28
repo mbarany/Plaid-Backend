@@ -6,8 +6,13 @@ use Httpful\Request;
 
 class Index extends AppController {
     public function index() {
+        if (!$this->getSession()->has('User')) {
+            $this->redirect('/authentication/login');
+            exit;
+        }
         $this->render();
     }
+
     public function connect() {
 exit;
         $request = Request::post(

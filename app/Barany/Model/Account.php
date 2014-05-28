@@ -44,6 +44,13 @@ class Account implements Exportable {
     }
 
     /**
+     * @return User
+     */
+    public function getUser() {
+        return $this->user;
+    }
+
+    /**
      * @return string
      */
     public function getAccessToken() {
@@ -57,8 +64,7 @@ class Account implements Exportable {
     {
         return [
             'id' => $this->getId(),
-            'name' => $this->getInstitution()->getName(),
-            'code' => $this->getInstitution()->getCode(),
+            'institution' => $this->getInstitution()->toApi(),
         ];
     }
 }

@@ -6,6 +6,7 @@ use Barany\Core\AppConfig;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\UnderscoreNamingStrategy;
 use Doctrine\ORM\Tools\Setup;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class Kernel implements Command {
     /**
@@ -23,10 +24,17 @@ class Kernel implements Command {
      */
     private $entityManager;
 
+    /**
+     * @var \Symfony\Component\HttpFoundation\Session\Session
+     */
+    private $session;
+
     public function __construct(AppConfig $appConfig) {
         $this->appConfig = $appConfig;
         $this->router = new Router($this);
         $this->setupDoctrine();
+        $this->session = new Session();
+        $this->session->start();
     }
 
     private function setupDoctrine() {
@@ -49,5 +57,9 @@ $isDevMode = true;
 
     public function getEntityManager() {
         return $this->entityManager;
+    }
+
+    public function getSession() {
+        return $this->session;
     }
 }

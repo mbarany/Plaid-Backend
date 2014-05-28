@@ -1,7 +1,11 @@
 {
     "require": {
-        "nategood/httpful": "*",
-        "klein/klein": "2.0.*",
-        "doctrine/orm": "*"
-    }
+        "nategood/httpful": "dev-dev",
+        "klein/klein": "dev-master",
+        "doctrine/orm": "2.5.*@dev",
+        "google/api-client": "dev-master",
+        "symfony/http-foundation": "2.5.*@dev",
+        "symfony/routing": "2.6.*@dev"
+    },
+    "minimum-stability": "beta"
 }

@@ -4,7 +4,9 @@
         <div ng-controller="ListAccountController">
             <h2>My Accounts</h2>
             <div class="list-group">
-                <a ng-repeat="account in accounts" class="list-group-item" href="#!/account/{{account.id}}">{{account.name}}</a>
+                <a ng-repeat="account in accounts" class="list-group-item" href="#!/account/{{account.id}}">
+                    {{account.institution.name}}
+                </a>
             </div>
         </div>
 

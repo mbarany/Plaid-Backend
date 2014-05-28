@@ -30,6 +30,20 @@ class User implements Exportable {
     }
 
     /**
+     * @return int
+     */
+    public function getId() {
+        return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEmail() {
+        return $this->email;
+    }
+
+    /**
      * @return ArrayCollection
      */
     public function getAccounts() {

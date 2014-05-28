@@ -28,23 +28,26 @@ class Api extends AppController {
     }
 
     public function accounts($httpRequest) {
-//@todo: Use session uid
-$userId = 1;
+        $user = $this->getSession()->get('User');
         /** @var User $user */
-        $user = $this->getEntityManager()->find('Barany\Model\User', $userId);
+        $user = $this->getEntityManager()->find('Barany\Model\User', $user['id']);
         $this->renderJson($user ? $user->getAccounts() : []);
     }
 
     public function account($httpRequest) {
         /** @var Account $account */
         $account = $this->getEntityManager()->find('Barany\Model\Account', $httpRequest->account_id);
+        $user = $this->getSession()->get('User');
+        if (!$account || $account->getUser()->getId() != $user['id']) {
+            exit;
+        }
 
         $plaidData = $this->getPlaidAccount($account);
 
         $accounts = [];
         foreach ($plaidData->body->accounts as $bankAccount) {
             $accounts[$bankAccount->_id] = [
-                'account' => $bankAccount,
+                'info' => $bankAccount,
                 'transactions' => [],
             ];
         }
@@ -54,6 +57,7 @@ $userId = 1;
 
         $this->renderJson(
             [
+                'id' => $account->getId(),
                 'institution' => $account->getInstitution()->toApi(),
                 'accounts' => array_values($accounts),
             ]

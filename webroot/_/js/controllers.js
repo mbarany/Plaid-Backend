@@ -41,7 +41,7 @@ angular.module('myApp', ['ngRoute'])
         $http.get("/api/account/" + $routeParams.accountId)
             .success(function(data) {
                 for (var i in data.accounts) {
-                    var balance = data.accounts[i].account.balance.current;
+                    var balance = data.accounts[i].info.balance.current;
                     for (var j in data.accounts[i].transactions) {
                         data.accounts[i].transactions[j].balance = balance;
                         balance = balance + data.accounts[i].transactions[j].amount;

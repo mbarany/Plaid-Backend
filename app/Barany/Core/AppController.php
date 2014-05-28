@@ -26,6 +26,10 @@ class AppController {
         return $this->kernel->getEntityManager();
     }
 
+    protected function getSession() {
+        return $this->kernel->getSession();
+    }
+
     protected function render() {
         $this->view->render();
     }
@@ -47,5 +51,12 @@ class AppController {
             $exportedData[$k] = $v instanceof Exportable ? $v->toApi() : $v;
         }
         echo json_encode($exportedData);
+    }
+
+    protected function redirect($url) {
+        if (strpos($url, '/') === 0) {
+            $url = 'http://' . $_SERVER['HTTP_HOST'] . $url;
+        }
+        header('Location: ' . $url);
     }
 } 

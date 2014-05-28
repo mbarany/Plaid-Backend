@@ -6,21 +6,29 @@ class Config extends AppConfig {
         return 'https://tartan.plaid.com/';
     }
 
-    public function getPlaidApiClientId() {
-        return 'test_id';
-    }
-
-    public function getPlaidApiSecret() {
-        return 'test_secret';
+    public function getPlaidApiCredentials() {
+        return array(
+            'client_id' => '',
+            'secret' => '',
+        );
     }
 
     public function getDatabaseCredentials()
     {
         return [
-            'driver'   => 'pdo_mysql',
-            'user'     => 'user',
-            'password' => 'password',
-            'dbname'   => 'plaid_database',
+            'driver' => 'pdo_mysql',
+            'user' => '',
+            'password' => '',
+            'dbname' => '',
+        ];
+    }
+
+    public function getGoogleCredentials()
+    {
+        return [
+            'client_id' => '',
+            'client_secret' => '',
+            'developer_key' => '',
         ];
     }
 }

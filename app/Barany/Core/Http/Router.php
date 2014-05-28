@@ -33,6 +33,9 @@ class Router {
 //        $this->klein->get('/connect', $this->toCallable('Index', 'connect'));
 //        $this->klein->get('/connect/step', $this->toCallable('Index', 'connectStep'));
 
+        $this->klein->get('/authentication/login', $this->toCallable('Authentication', 'login'));
+        $this->klein->get('/authentication/oauth', $this->toCallable('Authentication', 'oauth'));
+
         $this->klein->get('/api/institutions', $this->toCallable('Api', 'institutions'));
         $this->klein->get('/api/accounts', $this->toCallable('Api', 'accounts'));
         $this->klein->get('/api/account/[:account_id]', $this->toCallable('Api', 'account'));

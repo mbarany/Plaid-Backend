@@ -4,9 +4,9 @@
 
     <div ng-repeat="account in data.accounts">
 
-        <h3>{{account.account.meta.name}} ({{account.account.meta.number}})</h3>
-        <h4>Available: {{account.account.balance.available | currency : $}}</h4>
-        <h4>Current: {{account.account.balance.current | currency : $}}</h4>
+        <h3>{{account.info.meta.name}} ({{account.info.meta.number}})</h3>
+        <h4>Available: {{account.info.balance.available | currency : $}}</h4>
+        <h4>Current: {{account.info.balance.current | currency : $}}</h4>
 
         <table class="table table-condensed table-hover">
             <thead>
