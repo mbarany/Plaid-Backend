@@ -59,4 +59,8 @@ class AppController {
         }
         header('Location: ' . $url);
     }
+
+    protected function responseCode($code) {
+        http_response_code($code);
+    }
 } 

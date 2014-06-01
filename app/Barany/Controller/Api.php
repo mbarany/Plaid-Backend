@@ -29,6 +29,10 @@ class Api extends AppController {
 
     public function accounts($httpRequest) {
         $user = $this->getSession()->get('User');
+        if (!$user) {
+            $this->responseCode(401);
+            exit;
+        }
         /** @var User $user */
         $user = $this->getEntityManager()->find('Barany\Model\User', $user['id']);
         $this->renderJson($user ? $user->getAccounts() : []);
@@ -38,6 +42,10 @@ class Api extends AppController {
         /** @var Account $account */
         $account = $this->getEntityManager()->find('Barany\Model\Account', $httpRequest->account_id);
         $user = $this->getSession()->get('User');
+        if (!$user) {
+            $this->responseCode(401);
+            exit;
+        }
         if (!$account || $account->getUser()->getId() != $user['id']) {
             exit;
         }
