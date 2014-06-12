@@ -82,7 +82,10 @@ class Api extends AppController {
             $this->getAppConfig()->getPlaidApiCredentials(),
             array(
                 'access_token' => $access_token,
-            )
+            ),
+            [
+                'options' => json_encode(['pending' => true]),
+            ]
         );
         $concatedParams = array();
         foreach ($params as $k => $v) {

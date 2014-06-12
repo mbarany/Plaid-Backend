@@ -20,7 +20,7 @@
             <tbody>
                 <tr ng-repeat="transaction in account.transactions">
                     <td>{{transaction.date | date}}</td>
-                    <td>{{transaction.name}}</td>
+                    <td><strong ng-if="transaction.pending">**PENDING**</strong> {{transaction.name}}</td>
                     <td>{{transaction.amount * -1 | currency : $}}</td>
                     <td>{{transaction.balance | currency : $}}</td>
                 </tr>
