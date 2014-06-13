@@ -1,0 +1,33 @@
+{% extends "::base.html.twig" %}
+
+{% block body %}
+    {% verbatim %}
+    <div ng-controller="MainController" class="row">
+        <div class="col-md-4">
+
+            <div ng-controller="ListAccountController">
+                <h2>My Accounts</h2>
+                <div class="list-group">
+                    <a ng-repeat="account in accounts" class="list-group-item" href="#!/account/{{account.id}}">
+                        {{account.institution.name}}
+                    </a>
+                </div>
+            </div>
+
+            <div ng-controller="ListInstitutionController">
+                <h2>Add More</h2>
+                <ul>
+                    <li ng-repeat="account in accounts">
+                        {{account.name}} <a href="#!/add/{{account.id}}">(Add)</a>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+
+        <div class="col-md-8">
+            <div ng-view></div>
+        </div>
+    </div>
+    {% endverbatim %}
+{% endblock %}

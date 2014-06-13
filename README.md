@@ -24,9 +24,8 @@ Requirements
 
 Configuration
 =============
-- Setup your HTTP Web Server webroot to point at the `webroot` directory
-- Copy `config/Config.php.sample` to `config/Config.php` and make the necessary config changes
-- Run `composer install` for PHP dependencies
+- Setup your HTTP Web Server webroot to point at the `web` directory
+- Run `composer install` for PHP dependencies. The configuration script will run at the end to enter various configs and credentials (DB, Plaid, Google)
 - Run `npm install` for build dependencies
 - Run `bower install` for javascript dependencies
 - Run `gulp bower-files` to build the project javascript files

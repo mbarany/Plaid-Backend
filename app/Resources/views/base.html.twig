@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+    <head>
+        <meta charset="UTF-8" />
+        <title>{% block title %}Plaid Backend{% endblock %}</title>
+
+        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+
+        <link rel="stylesheet" href="/_/css/main.css">
+
+        {% block stylesheets %}{% endblock %}
+    </head>
+    <body>
+        {% block body %}{% endblock %}
+
+        <script src="/_/build/vendor.js"></script>
+        <script src="/_/js/controllers.js"></script>
+        {% block javascripts %}{% endblock %}
+    </body>
+</html>
