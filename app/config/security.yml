@@ -1,12 +1,46 @@
 security:
     providers:
-        in_memory:
-            memory: ~
+        webusers:
+            entity:
+                class: Barany\Plaid\MainBundle\Entity\User
+                property: email
+
+        api_keys:
+            id: apikey_user_provider
 
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
 
-        default:
+        api_login:
+            pattern: ^/api/authenticate$
             anonymous: ~
+            stateless: true
+
+        api:
+            context: main
+            pattern: ^/api/
+            provider: api_keys
+            simple_preauth:
+                authenticator: apikey_authenticator
+
+        main:
+            context: main
+            pattern: ^/
+            anonymous: ~
+            provider: webusers
+            form_login:
+                login_path: login
+            logout:
+                path: /logout
+                target: /authentication/logout
+
+    role_hierarchy:
+        ROLE_USER: ROLE_API
+
+    access_control:
+        - { path: ^/authentication/, roles: IS_AUTHENTICATED_ANONYMOUSLY, methods: [GET] }
+        - { path: ^/api/authenticate$, roles: IS_AUTHENTICATED_ANONYMOUSLY, methods: [POST] }
+        - { path: ^/api/, roles: ROLE_API }
+        - { path: ^/, roles: ROLE_USER }

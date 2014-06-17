@@ -4,11 +4,14 @@ namespace Barany\Plaid\MainBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity @ORM\Table
+ * @ORM\Entity
+ * @ORM\Table
  */
 class ApiToken {
     /**
-     * @ORM\Id @ORM\Column(type="integer") @ORM\GeneratedValue
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue
      * @var int
      */
     private $id;
@@ -37,5 +40,12 @@ class ApiToken {
      */
     public function getToken() {
         return $this->token;
+    }
+
+    /**
+     * @return User
+     */
+    public function getUser() {
+        return $this->user;
     }
 } 

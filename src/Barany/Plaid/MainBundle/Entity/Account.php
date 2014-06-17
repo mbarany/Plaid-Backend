@@ -4,11 +4,14 @@ namespace Barany\Plaid\MainBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity @ORM\Table
+ * @ORM\Entity
+ * @ORM\Table
  */
 class Account implements Exportable {
     /**
-     * @ORM\Id @ORM\Column(type="integer") @ORM\GeneratedValue
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue
      * @var int
      */
     private $id;

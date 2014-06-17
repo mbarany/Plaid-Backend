@@ -3,3 +3,5 @@ barany_plaid_main:
     type:     annotation
     prefix:   /
 
+logout:
+    path: /logout

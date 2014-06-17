@@ -3,10 +3,10 @@ namespace Barany\Plaid\MainBundle\Controller;
 
 use Barany\Plaid\MainBundle\Entity\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as Router;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 class AuthenticationController extends BaseController
 {
@@ -40,34 +40,18 @@ class AuthenticationController extends BaseController
     }
 
     /**
-     * @Router\Route("/authentication/login")
+     * @Router\Route("/authentication/login", name="login")
      * @param Request $request
      * @return Response
      */
     public function login(Request $request)
     {
         $this->setup();
-        $access_token = $request->getSession()->get('google_access_token');
-        if(!$access_token){
+        $accessToken = $request->getSession()->get('google_access_token');
+        if (!$accessToken){
             return $this->redirect($this->google_client->createAuthUrl());
         }
-        $this->google_client->setAccessToken($access_token);
-        $oauth2 = new \Google_Service_Oauth2($this->google_client);
-        $googleUser = $oauth2->userinfo->get();
-
-        /** @var User $user */
-        $user = $this
-            ->getDoctrine()
-            ->getManager()
-            ->getRepository('Barany\Plaid\MainBundle\Entity\User')
-            ->findOneBy(['email' => $googleUser['email']]);
-        if ($user) {
-            $request->getSession()->set('User', array(
-                'id' => $user->getId(),
-                'email' => $user->getEmail(),
-            ));
-        }
-        return $this->redirect('/');
+        return $this->tryLogin($request, $accessToken);
     }
 
     /**
@@ -83,8 +67,53 @@ class AuthenticationController extends BaseController
             throw new BadRequestHttpException();
         }
         $this->google_client->authenticate($_REQUEST['code']);
-        $request->getSession()->set('google_access_token', $this->google_client->getAccessToken());
+        $accessToken = $this->google_client->getAccessToken();
+        $request->getSession()->set('google_access_token', $accessToken);
 
-        return new RedirectResponse('/authentication/login');
+        return $this->tryLogin($request, $accessToken);
+    }
+
+    /**
+     * @Router\Route("/authentication/logout")
+     * @return Response
+     * @throws \Symfony\Component\HttpKernel\Exception\BadRequestHttpException
+     */
+    public function logout()
+    {
+        return new Response('You are now logged out!');
+    }
+
+    /**
+     * @param Request $request
+     * @param string $accessToken
+     * @return Response
+     */
+    private function tryLogin(Request $request, $accessToken)
+    {
+        $this->google_client->setAccessToken($accessToken);
+        $oauth2 = new \Google_Service_Oauth2($this->google_client);
+        try {
+            $googleUser = $oauth2->userinfo->get();
+        } catch (\Google_Auth_Exception $e) {
+            $request->getSession()->remove('google_access_token');
+            return $this->redirect($this->google_client->createAuthUrl());
+        }
+
+        /** @var User $user */
+        $user = $this
+            ->getDoctrine()
+            ->getManager()
+            ->getRepository('Barany\Plaid\MainBundle\Entity\User')
+            ->findOneBy(['email' => $googleUser['email']]);
+        if ($user) {
+            $request->getSession()->set('User', array(
+                'id' => $user->getId(),
+                'email' => $user->getEmail(),
+            ));
+            $context = 'main';
+            $token = new UsernamePasswordToken($user, $user->getPassword(), $context, $user->getRoles());
+            $this->get("security.context")->setToken($token);
+        }
+        return $this->redirect('/');
     }
 }

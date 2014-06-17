@@ -2,23 +2,17 @@
 namespace Barany\Plaid\MainBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as Router;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 class IndexController extends BaseController {
 
     /**
      * @Router\Route("/")
-     * @Router\Template
-     * @param Request $request
-     * @return Response
+     * @Router\Template("BaranyPlaidMainBundle:Index:index.html.twig")
+     * @return array
      */
-    public function indexAction(Request $request) {
-        if (!$request->getSession()->has('User')) {
-            return new RedirectResponse('/authentication/login');
-        }
-        return $this->render('BaranyPlaidMainBundle:Index:index.html.twig');
+    public function index() {
+        return [];
     }
 
     public function connect() {

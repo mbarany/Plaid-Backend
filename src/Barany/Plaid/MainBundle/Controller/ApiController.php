@@ -9,12 +9,14 @@ use Httpful;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as Router;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ApiController extends BaseController
 {
     /**
      * @Router\Route("/api/institutions")
+     * @Router\Method({"GET"})
      */
     public function institutions()
     {
@@ -24,7 +26,11 @@ class ApiController extends BaseController
             ->addFieldResult('i', 'id', 'id')
             ->addFieldResult('i', 'name', 'name')
             ->addFieldResult('i', 'code', 'code');
-        $sql = "SELECT i.id, i.name, i.code FROM institution i FORCE INDEX(name_idx) ORDER BY i.name ASC";
+        $sql = <<<SQL
+            SELECT i.id, i.name, i.code
+            FROM institution i FORCE INDEX(name_idx)
+            ORDER BY i.name ASC
+SQL;
         $query = $this
             ->getDoctrine()
             ->getManager()
@@ -37,46 +43,34 @@ class ApiController extends BaseController
 
     /**
      * @Router\Route("/api/accounts")
-     * @param Request $request
+     * @Router\Method({"GET"})
      * @return Response
-     * @throws \Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException
      */
-    public function accounts(Request $request)
+    public function accounts()
     {
-        $user = $request->getSession()->get('User');
-        if (!$user) {
-            //@todo Handle this in security/firewall
-            throw new UnauthorizedHttpException('None');
-        }
         /** @var User $user */
-        $user = $this
-            ->getDoctrine()
-            ->getManager()
-            ->find('Barany\Plaid\MainBundle\Entity\User', $user['id']);
+        $user = $this->getUser();
         return $this->renderJson($user ? $user->getAccounts() : []);
     }
 
     /**
      * @Router\Route("/api/account/{account_id}")
-     * @param Request $request
+     * @Router\Method({"GET"})
      * @param int $account_id
      * @return Response
-     * @throws \Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
-    public function account(Request $request, $account_id)
+    public function account($account_id)
     {
         /** @var Account $account */
         $account = $this
             ->getDoctrine()
             ->getManager()
             ->find('Barany\Plaid\MainBundle\Entity\Account', $account_id);
-        $user = $request->getSession()->get('User');
-        if (!$user) {
-            //@todo Handle this in security/firewall
-            throw new UnauthorizedHttpException('None');
-        }
-        if (!$account || $account->getUser()->getId() != $user['id']) {
-            exit;
+        /** @var User $user */
+        $user = $this->getUser();
+        if (!$account || $account->getUser()->getId() != $user->getId()) {
+            throw new NotFoundHttpException();
         }
 
         $plaidData = $this->getPlaidAccount($account);
@@ -105,17 +99,16 @@ class ApiController extends BaseController
      * @Router\Route("/api/authenticate")
      * @Router\Method({"POST"})
      * @param Request $request
-     * @param string $accessToken
-     * @return Response
-     * @throws \Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
      */
-    public function authenticate(Request $request, $accessToken)
+    public function authenticate(Request $request)
     {
+        $accessToken = $request->get('accessToken');
         $url = 'https://www.googleapis.com/oauth2/v2/userinfo?access_token=' . $accessToken;
         $response = Httpful\Request::get($url)->send();
         if (!isset($response->body->email)) {
-            //@todo Handle this in security/firewall
-            throw new UnauthorizedHttpException('None');
+            throw new AccessDeniedHttpException();
         }
         $email = $response->body->email;
         /** @var User $user */
@@ -125,19 +118,9 @@ class ApiController extends BaseController
             ->getRepository('Barany\Plaid\MainBundle\Entity\User')
             ->findOneBy(['email' => $email]);
         if (!$user) {
-            //@todo Handle this in security/firewall
-            throw new UnauthorizedHttpException('None');
+            throw new AccessDeniedHttpException();
         }
-        $request->getSession()->set('User', array(
-            'id' => $user->getId(),
-            'email' => $user->getEmail(),
-        ));
-        return $this->renderJson(['token' => session_id()]);
-
-        /**
-         * @todo: Store a permanent API Token for each User (for each platform?)
-         */
-
+        return $this->renderJson(['token' => $user->getApiTokens()->first()->getToken()]);
     }
 
     /**

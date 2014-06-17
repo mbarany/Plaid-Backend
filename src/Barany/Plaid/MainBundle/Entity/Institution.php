@@ -4,13 +4,16 @@ namespace Barany\Plaid\MainBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity @ORM\Table(indexes={
+ * @ORM\Entity
+ * @ORM\Table(indexes={
  *  @ORM\Index(name="name_idx", columns={"name"})
  * })
  */
 class Institution implements Exportable {
     /**
-     * @ORM\Id @ORM\Column(type="integer") @ORM\GeneratedValue
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue
      * @var int
      */
     private $id;

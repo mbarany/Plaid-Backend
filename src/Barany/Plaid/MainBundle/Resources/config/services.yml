@@ -1,0 +1,11 @@
+services:
+    apikey_authenticator:
+        class: Barany\Plaid\MainBundle\Security\ApiKeyAuthenticator
+        arguments:
+            userProvider: "@apikey_user_provider"
+            serviceContainer: "@service_container"
+
+    apikey_user_provider:
+        class: Barany\Plaid\MainBundle\Security\ApiKeyUserProvider
+        arguments:
+            entityManager: "@doctrine.orm.entity_manager"
